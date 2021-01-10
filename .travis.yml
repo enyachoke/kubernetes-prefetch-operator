@@ -14,7 +14,7 @@ jobs:
       - chmod u+x bin/dep
       - export PATH=$PWD/bin:$PATH
       - curl -LO https://github.com/operator-framework/operator-sdk/releases/download/v1.3.0/operator-sdk_linux_arm64
-      - chmod +x operator-sdk_linux_arm64 && mkdir -p ./bin/operator-sdk && mv operator-sdk_linux_arm64/ ./bin/operator-sdk/
+      - chmod +x operator-sdk_linux_arm64 && mkdir -p ./bin/operator-sdk && mv operator-sdk_linux_arm64 ./bin/operator-sdk/
       - export PATH=$PATH:./bin/operator-sdk/bin
       - curl -L https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv3.9.1/kustomize_v3.9.1_linux_arm64.tar.gz > /tmp/kustomize.tar.gz
       - tar -zxvf /tmp/kustomize.tar.gz
