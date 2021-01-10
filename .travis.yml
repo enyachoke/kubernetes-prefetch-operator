@@ -1,6 +1,5 @@
 language: go
 services: docker
-sudo: required
 install: sudo apt-get -y install jq sed curl
 jobs:
   include:
@@ -13,18 +12,6 @@ jobs:
       - mkdir -p bin
       - wget https://github.com/golang/dep/releases/download/v0.5.1/dep-linux-arm64 -O bin/dep
       - chmod u+x bin/dep
-      - curl -LO https://github.com/operator-framework/operator-sdk/releases/download/v1.3.0/operator-sdk_linux_arm64
-      - chmod +x operator-sdk_linux_arm64 && mkdir -p ./bin/operator-sdk && mv operator-sdk_linux_arm64 ./bin/operator-sdk/
-      - export PATH=$PATH:./bin/operator-sdk/bin
-      - curl -L https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv3.9.1/kustomize_v3.9.1_linux_arm64.tar.gz > /tmp/kustomize.tar.gz
-      - tar -zxvf /tmp/kustomize.tar.gz
-      - mv kustomize ./bin
-      - curl -L https://github.com/kubernetes-sigs/kind/releases/download/v0.9.0/kind-linux-arm64 > ./bin/kind
-      - chmod +x ./bin/kind ./bin/kustomize
-      - os=$(go env GOOS)
-      - arch=$(go env GOARCH)
-      - curl -L https://go.kubebuilder.io/dl/2.3.1/${os}/${arch} | tar -xz -C /tmp/
-      - sudo mv /tmp/kubebuilder_2.3.1_${os}_${arch} /usr/local/kubebuilder
       - export PATH=$PWD/bin:$PATH
       script: bash docker_build.sh
       name:  Building and pushing ARMv8 images
@@ -36,19 +23,7 @@ jobs:
       - mkdir -p bin
       - wget https://github.com/golang/dep/releases/download/v0.5.1/dep-linux-amd64 -O bin/dep
       - chmod u+x bin/dep
-      - curl -LO https://github.com/operator-framework/operator-sdk/releases/download/v1.1.0/operator-sdk-v1.1.0-x86_64-linux-gnu
-      - chmod +x operator-sdk-v1.1.0-x86_64-linux-gnu && mkdir -p ./bin/operator-sdk && mv operator-sdk-v1.1.0-x86_64-linux-gnu ./bin/operator-sdk/
-      - export PATH=$PATH:./bin/operator-sdk/bin
-      - curl -L https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv3.8.6/kustomize_v3.8.6_linux_amd64.tar.gz > /tmp/kustomize.tar.gz
-      - tar -zxvf /tmp/kustomize.tar.gz
-      - mv kustomize ./bin
-      - curl -L https://github.com/kubernetes-sigs/kind/releases/download/v0.8.1/kind-linux-amd64 > ./bin/kind
-      - chmod +x ./bin/kind ./bin/kustomize
       - export PATH=$PWD/bin:$PATH
-      - os=$(go env GOOS)
-      - arch=$(go env GOARCH)
-      - curl -L https://go.kubebuilder.io/dl/2.3.1/${os}/${arch} | tar -xz -C /tmp/
-      - sudo mv /tmp/kubebuilder_2.3.1_${os}_${arch} /usr/local/kubebuilder
       script: bash docker_build.sh
     - os: linux
       dist: focal
