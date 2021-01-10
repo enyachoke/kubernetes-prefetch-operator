@@ -1,5 +1,6 @@
 language: go
 services: docker
+sudo: required
 install: sudo apt-get -y install jq sed curl
 jobs:
   include:
@@ -20,6 +21,10 @@ jobs:
       - mv kustomize ./bin
       - curl -L https://github.com/kubernetes-sigs/kind/releases/download/v0.9.0/kind-linux-arm64 > ./bin/kind
       - chmod +x ./bin/kind ./bin/kustomize
+      - os=$(go env GOOS)
+      - arch=$(go env GOARCH)
+      - curl -L https://go.kubebuilder.io/dl/2.3.1/${os}/${arch} | tar -xz -C /tmp/
+      - sudo mv /tmp/kubebuilder_2.3.1_${os}_${arch} /usr/local/kubebuilder
       - export PATH=$PWD/bin:$PATH
       script: bash docker_build.sh
       name:  Building and pushing ARMv8 images
