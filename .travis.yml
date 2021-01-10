@@ -45,6 +45,10 @@ jobs:
       - curl -L https://github.com/kubernetes-sigs/kind/releases/download/v0.8.1/kind-linux-amd64 > ./bin/kind
       - chmod +x ./bin/kind ./bin/kustomize
       - export PATH=$PWD/bin:$PATH
+      - os=$(go env GOOS)
+      - arch=$(go env GOARCH)
+      - curl -L https://go.kubebuilder.io/dl/2.3.1/${os}/${arch} | tar -xz -C /tmp/
+      - sudo mv /tmp/kubebuilder_2.3.1_${os}_${arch} /usr/local/kubebuilder
       script: bash docker_build.sh
     - os: linux
       dist: focal
