@@ -1,0 +1,36 @@
+language: go
+services: docker
+install: sudo apt-get -y install jq sed curl
+jobs:
+  include:
+    - os: linux
+      go: 1.15
+      dist: bionic
+      arch: arm64
+      stage: Build arm64 image
+      before_script:
+      - mkdir -p bin
+      - wget https://github.com/golang/dep/releases/download/v0.5.1/dep-linux-arm64 -O bin/dep
+      - chmod u+x bin/dep
+      - export PATH=$PWD/bin:$PATH
+      script: bash docker_build.sh
+      name:  Building and pushing ARMv8 images
+    - dist: bionic
+      go: 1.15
+      arch: amd64
+      name:  Building and pushing x86 images
+      before_script:
+      - mkdir -p bin
+      - wget https://github.com/golang/dep/releases/download/v0.5.1/dep-linux-amd64 -O bin/dep
+      - chmod u+x bin/dep
+      - export PATH=$PWD/bin:$PATH
+      script: bash docker_build.sh
+    - os: linux
+      dist: focal
+      arch: amd64
+      stage: Create multi arch image
+      name: Create and push docker manifest
+      script: 
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - cat <<< $(jq '.+{"experimental":"enabled"}' ~/.docker/config.json) > ~/.docker/config.json
+        - bash docker_push.sh
